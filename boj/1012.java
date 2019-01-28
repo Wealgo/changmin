@@ -1,15 +1,15 @@
-
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Main{
     public static int[][] map;
     public static int[][] newMap;
-    public static int num = 0;
+    public static int num;
+	private static Scanner sc;
     public static void main(String[] args) {
-    	Scanner sc = new Scanner(System.in);
+    	sc = new Scanner(System.in);
     	int testcase = sc.nextInt();
-    	LinkedList<Integer> list = new LinkedList<>();
+    	
     	for (int i = 0; i < testcase; i++) {
 			num = 0;
     		int sero = sc.nextInt();
@@ -20,10 +20,10 @@ public class Main{
 			
 			for (int j = 0; j < cabbage; j++) {
 				map[sc.nextInt()][sc.nextInt()] = 1;	
-			}	
+			}
 			for (int k = 0; k < cabbage; k++) {
 				LinkedList<Integer> start = findStart();
-				re(start);			
+				dfs(start);			
 			}
 			int output = 0;
 			for (int j = 0; j < newMap.length; j++) {
@@ -35,10 +35,9 @@ public class Main{
 			}
 			System.out.println(output);
         }
-
-		/**/
+    	sc.close();
     }
-    public static void re(LinkedList<Integer> position) {
+    public static void dfs(LinkedList<Integer> position) {
 		
 		if (position.isEmpty()) {
 
@@ -50,7 +49,7 @@ public class Main{
 					LinkedList<Integer> list = new LinkedList<>();
 					list.addAll(position);
 					list.set(1, position.getLast()+1);
-					re(list);
+					dfs(list);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -61,7 +60,7 @@ public class Main{
 					LinkedList<Integer> list = new LinkedList<>();
 					list.addAll(position);
 					list.set(1, position.getLast()-1);
-					re(list);
+					dfs(list);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -72,7 +71,7 @@ public class Main{
 					LinkedList<Integer> list = new LinkedList<>();
 					list.addAll(position);
 					list.set(0, position.getFirst()-1);
-					re(list);
+					dfs(list);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -84,7 +83,7 @@ public class Main{
 					LinkedList<Integer> list = new LinkedList<>();
 					list.addAll(position);
 					list.set(0, position.getFirst()+1);
-					re(list);
+					dfs(list);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
