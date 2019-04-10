@@ -28,9 +28,11 @@ public class Main{
 			}
 			
 			while (!dir.isEmpty()) {
+				//초기화.
 				for(int x=0;x<4;x++) num[x]=0;
-				
+				//명령어 넣어준다.
 				solution(nMag.poll(), dir.poll());
+				
 				for(int x=0;x<4;x++){
 					if(num[x]==-1) left(x);
 					else if(num[x]==1) right(x);
@@ -38,6 +40,7 @@ public class Main{
 			}
 			
 			int sum=0;
+			//비트마스크연산.
 			for(int x=0;x<4;x++){
 				if(mag[x][0]==1){
 					sum+=1<<x;
@@ -46,10 +49,13 @@ public class Main{
 			System.out.println("#"+i+" "+sum);
     	}
 	}
+	
 	public static void solution(int cnt,int t) {
+		//자석은 1부터 시작이니 --해준다.
 		cnt--;
-		
-		num[cnt]=t;
+		//해당자석에 돌릴 방향을 준다.
+		num[cnt] = t;
+		//현재위치에서 오른쪽의 자석들을 조진다.
 		for (int i = cnt; i < 3; i++) {
 			if(mag[i][2]!=mag[i+1][6]){
 				num[i+1]=num[i]*-1;
@@ -58,8 +64,8 @@ public class Main{
 				break;
 			}
 		}
-		
-		for(int i=cnt;i>0;i--){
+		//현재위치에서 왼쪽의 자석들을 조진다.
+		for(int i = cnt; i > 0; i--) {
 			if(mag[i][6]!=mag[i-1][2]){
 				num[i-1]=num[i]*-1;
 			}
@@ -69,6 +75,8 @@ public class Main{
 		}
 		
 	}
+	//시계방향으로 회전.
+	//매개변수는 자석의 번호.
 	public static void right(int nmag) {
 		int[] tmp = new int [8];
 		int ntmp = mag[nmag][7];
@@ -78,6 +86,8 @@ public class Main{
 		tmp[0] = ntmp;
 		mag[nmag] = tmp;
 	}
+	//반시계방향으로 회전.
+	//매개변수는 자석의 번호.
 	public static void left(int nmag) {
 		int [] tmp = new int[8];
 		int ntmp = mag[nmag][0];
