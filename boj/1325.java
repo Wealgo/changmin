@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
+ * 현재 자바언어 기준으로 1등 먹었다 ㅋㅋㅋㅋㅋ
  * 완탐으로 풀면 시간초과난다.
  * 시간복잡도를 우선 계산하고 완탐으로 할건지, dfs, bfs로 할건지 선택하자.
  * 인접배열 형식으로 그래프를 표현하니 시간이 더 빠르다.
