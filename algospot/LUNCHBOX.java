@@ -1,68 +1,77 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 /*
- * 시간초과가 발생.
- * 시간복잡도 계산을 먼저 해보자.
- * 제한시간은 0.5
- * 각 테스트케이스당 최대 도시락과 사람의 수는 1만.
- * wjdfuf()은 선택정렬로 구현했으니 n^2.
- * 최악의 테스트케이스의 경우 대략 1초 걸림.
- * 가장 시간을 많이 잡아먹는 부분이 wjdfuf()이라 예상한다.
- * 아니면 hap()이놈도 문제.
+ * 
  */
-public class Main{
+public class Main {
 	public static LinkedList<Integer> hot = new LinkedList<>();
 	public static LinkedList<Integer> eat = new LinkedList<>();
+	public static LinkedList<Lunchbox> sibal = new LinkedList<>();
 	public static int time = 0;
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int testcase = sc.nextInt();
+	public static void main(String[] args) throws Exception, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		int testcase = Integer.parseInt(br.readLine());
 		for (int k = 0; k < testcase; k++) {
-			int n = sc.nextInt();
-			
+			int n = Integer.parseInt(br.readLine());
+			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < n; j++) {
-				hot.add(sc.nextInt());
+				hot.add(Integer.parseInt(st.nextToken()));
 			}
+			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < n; j++) {
-				eat.add(sc.nextInt());
+				eat.add(Integer.parseInt(st.nextToken()));
 			}
-			wjdfuf();
+			for (int i = 0; i < n; i++) {
+				Lunchbox lun = new Lunchbox(hot.get(i), eat.get(i));
+				sibal.add(lun);
+			}
+			//정렬.
+			Collections.sort(sibal);
 			System.out.println(time());
+			//초기화.
 			hot = new LinkedList<>();
 			eat = new LinkedList<>();
+			sibal = new LinkedList<>();
 			time = 0;
 		}
-
-	}
-	public static void wjdfuf() {
-		for (int i = 0; i < eat.size(); i++) {
-			int which = i;
-			for (int j = i+1; j < eat.size(); j++) {
-				if (eat.get(which) <= eat.get(j)) {
-					which = j;
-				}
-			}
-			Collections.swap(eat, i, which);
-			Collections.swap(hot, i, which);
-		}
+		br.close();
 	}
 	public static int time() {
 		LinkedList<Integer> list = new LinkedList<>();
 		int tmp = 0;
 		for (int i = 0; i < hot.size(); i++) {
-			tmp = hot.get(i) + tmp;
-			list.add(tmp + eat.get(i));
+			tmp = tmp + sibal.get(i).hot;
+			list.add(tmp + sibal.get(i).eat);
 		}
 		Collections.sort(list);
 		return list.getLast();
 	}
-	public static int hap(int n) {
-		int output = 0;
-		for (int i = 0; i <= n-1; i++) {
-			output = output + hot.get(i);
+}
+class Lunchbox implements Comparable<Lunchbox> {
+	int hot;
+	int eat;
+	public Lunchbox(int hot, int eat) {
+		// TODO Auto-generated constructor stub
+		this.hot = hot;
+		this.eat = eat;
+	}
+	public int gethot() {
+		return hot;
+	}
+	@Override
+	public int compareTo(Lunchbox o) {
+		// TODO Auto-generated method stub
+		if (this.eat < o.eat) {
+			return 1;
+		} else if (this.eat > o.eat) {
+			return -1;
 		}
-		return output;		
+		return 0;
 	}
 }
