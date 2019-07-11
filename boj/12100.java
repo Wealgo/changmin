@@ -1,7 +1,13 @@
 import java.util.LinkedList;
 import java.util.Scanner;
-
-
+/**
+ * boj/13460과 유형이 비슷한 문제.
+ * 해당 코드는 476ms이 걸림.
+ * 해당 문제 1위는 108ms.
+ * 같은 방향으로 여러번 연속되도 값이 똑같으니 이부분을 배제하는 로직을 추가해보자.
+ * @author quadcore
+ *
+ */
 public class Main{
 	public static int output = 0;
 	
