@@ -3,9 +3,9 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 /**
- * 문제의 출력 형식을 제대로 읽지 않아 20개씩 짤라 출력하지 않음
- * 3시간 소비함.
- * 문제좀 똑바로 읽자.
+ * 문제를 차근히 읽자.
+ * 여학생의 경우 "좌우가 대칭이면서 가장 많은 구간을 포함하는 구간"의 이해를 잘못함.
+ * 크게 어려운 문제는 아니었지만 문제의 명시가 애매해서 시간을 많이 잡아먹음.
  * @author quadcore
  *
  */
@@ -41,11 +41,12 @@ public class Main{
 			} else {
 				System.out.print(0+" ");
 			}
-			if (i%20 == 0) {
+            if (i%20 == 0) {
 				System.out.println();
 			}
 		}
 	}
+	//남학생인 경우~
 	public static void male(int idx) {
 		for (int i = 0; i < swich.length; i+=idx) {
 			if (i == 0) {
@@ -58,6 +59,7 @@ public class Main{
 			}
 		}
 	}
+	//여학생인 경우~
 	public static void female(int idx) {
 		int pl = idx;
 		int mi = idx;
@@ -73,7 +75,6 @@ public class Main{
 				break;
 			}
 		}
-		System.out.println(mi + ":" + pl);
 		for (int i = mi; i <= pl; i++) {
 			if (swich[i]) {
 				swich[i] = false;
