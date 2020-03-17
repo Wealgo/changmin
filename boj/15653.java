@@ -5,13 +5,12 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 /**
- * 제발 가즈아~!
+ * 제발 real로다가 가즈아~!
  * @author quadcore
  *
  */
 public class Main {
 	public static int garo, sero;
-	
 	public static void main(String[] args) throws IOException {
 		char map[][];
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,13 +26,16 @@ public class Main {
 		}
 		System.out.println(bfs(map));
 	}
+	
 	public static int bfs(char[][] map) {
-		Struct first = new Struct(map, map, 0);
+		boolean visited[][][][] = new boolean[sero][garo][sero][garo];
+		Struct first = new Struct(map, visited, 0);
+		first.setRB();
+		first.visited[first.ry][first.rx][first.by][first.bx] = true;
 		LinkedList<Struct> list = new LinkedList<>();
 		list.add(first);
 		while (!list.isEmpty()) {
 			Struct tmp = list.pollFirst();
-
 			LinkedList<Integer> Rwhich = findR(tmp.map);
 			LinkedList<Integer> Bwhich = findB(tmp.map);
 			if (Bwhich.size() < 1) {
@@ -52,100 +54,96 @@ public class Main {
 				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', tmp);
 				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', s);
 			}
+			s.time = tmp.time + 1;
 			//visited check
-			char[][] visited = cVisited(tmp.visited);
-			s.visited = visited;
+			s.visited = tmp.visited;
 			s.setRB();
-			if (s.ry != -1 && s.by != -1) {
-				if (s.map[s.ry][s.rx] == visited[s.ry][s.rx] && s.map[s.by][s.bx] == visited[s.by][s.bx]) {
-					
+			if (s.by != -1) {
+				if (s.ry != -1) {
+					if (!s.visited[s.ry][s.rx][s.by][s.bx]) {
+						s.visited[s.ry][s.rx][s.by][s.bx] = true;
+						list.add(s);
+					}
 				} else {
-					s.visited[s.ry][s.rx] = 'R';
-					s.visited[s.by][s.bx] = 'B';
-					list.add(s);
+					return s.time;
+				}
+			}
+			
+			//down
+			s = new Struct();
+			if (Rwhich.get(0) < Bwhich.get(0)) {
+				s = moveBall(Bwhich.get(0), Bwhich.get(1), 1, 'B', tmp);
+				s = moveBall(Rwhich.get(0), Rwhich.get(1), 1, 'R', s);
+			} else {
+				s = moveBall(Rwhich.get(0), Rwhich.get(1), 1, 'R', tmp);
+				s = moveBall(Bwhich.get(0), Bwhich.get(1), 1, 'B', s);
+			}
+			s.time = tmp.time + 1;
+			//visited check
+			s.visited = tmp.visited;
+			s.setRB();
+			if (s.by != -1) {
+				if (s.ry != -1) {
+					if (!s.visited[s.ry][s.rx][s.by][s.bx]) {
+						s.visited[s.ry][s.rx][s.by][s.bx] = true;
+						list.add(s);
+					}
+				} else {
+					return s.time;
+				}
+			}
+			
+			//left
+			s = new Struct();
+			if (Rwhich.get(1) > Bwhich.get(1)) {
+				s = moveBall(Bwhich.get(0), Bwhich.get(1), 2, 'B', tmp);
+				s = moveBall(Rwhich.get(0), Rwhich.get(1), 2, 'R', s);
+			} else {
+				s = moveBall(Rwhich.get(0), Rwhich.get(1), 2, 'R', tmp);
+				s = moveBall(Bwhich.get(0), Bwhich.get(1), 2, 'B', s);
+			}
+			s.time = tmp.time + 1;
+			//visited check
+			s.visited = tmp.visited;
+			s.setRB();
+			if (s.by != -1) {
+				if (s.ry != -1) {
+					if (!s.visited[s.ry][s.rx][s.by][s.bx]) {
+						s.visited[s.ry][s.rx][s.by][s.bx] = true;
+						list.add(s);
+					}
+				} else {
+					return s.time;
 				}
 			}
 			
 			s = new Struct();
-			if (Rwhich.get(0) > Bwhich.get(0)) {
-				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', tmp);
-				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', s);
+			if (Rwhich.get(1) < Bwhich.get(1)) {
+				s = moveBall(Bwhich.get(0), Bwhich.get(1), 3, 'B', tmp);
+				s = moveBall(Rwhich.get(0), Rwhich.get(1), 3, 'R', s);
 			} else {
-				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', tmp);
-				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', s);
+				s = moveBall(Rwhich.get(0), Rwhich.get(1), 3, 'R', tmp);
+				s = moveBall(Bwhich.get(0), Bwhich.get(1), 3, 'B', s);
 			}
+			s.time = tmp.time + 1;
 			//visited check
-			visited = new char[sero][garo];
-			visited = cVisited(tmp.visited);
-			s.visited = visited;
+			s.visited = tmp.visited;
 			s.setRB();
-			if (s.ry != -1 && s.by != -1) {
-				if (s.map[s.ry][s.rx] == visited[s.ry][s.rx] && s.map[s.by][s.bx] == visited[s.by][s.bx]) {
-					
+			if (s.by != -1) {
+				if (s.ry != -1) {
+					if (!s.visited[s.ry][s.rx][s.by][s.bx]) {
+						s.visited[s.ry][s.rx][s.by][s.bx] = true;
+						list.add(s);
+					}
 				} else {
-					s.visited[s.ry][s.rx] = 'R';
-					s.visited[s.by][s.bx] = 'B';
-					list.add(s);
+					return s.time;
 				}
 			}
 			
-			s = new Struct();
-			if (Rwhich.get(0) > Bwhich.get(0)) {
-				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', tmp);
-				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', s);
-			} else {
-				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', tmp);
-				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', s);
-			}
-			//visited check
-			visited = new char[sero][garo];
-			visited = cVisited(tmp.visited);
-			s.visited = visited;
-			s.setRB();
-			if (s.ry != -1 && s.by != -1) {
-				if (s.map[s.ry][s.rx] == visited[s.ry][s.rx] && s.map[s.by][s.bx] == visited[s.by][s.bx]) {
-					
-				} else {
-					s.visited[s.ry][s.rx] = 'R';
-					s.visited[s.by][s.bx] = 'B';
-					list.add(s);
-				}
-			}
-			
-			s = new Struct();
-			if (Rwhich.get(0) > Bwhich.get(0)) {
-				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', tmp);
-				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', s);
-			} else {
-				s = moveBall(Rwhich.get(0), Rwhich.get(1), 0, 'R', tmp);
-				s = moveBall(Bwhich.get(0), Bwhich.get(1), 0, 'B', s);
-			}
-			//visited check
-			visited = new char[sero][garo];
-			visited = cVisited(tmp.visited);
-			s.visited = visited;
-			s.setRB();
-			if (s.ry != -1 && s.by != -1) {
-				if (s.map[s.ry][s.rx] == visited[s.ry][s.rx] && s.map[s.by][s.bx] == visited[s.by][s.bx]) {
-					
-				} else {
-					s.visited[s.ry][s.rx] = 'R';
-					s.visited[s.by][s.bx] = 'B';
-					list.add(s);
-				}
-			}
 		}
 		return -1;
 	}
-	public static char[][] cVisited(char[][] visited) {
-		char[][] nvisited = new char[sero][garo];
-		for (int i = 0; i < nvisited.length; i++) {
-			for (int j = 0; j < nvisited[0].length; j++) {
-				nvisited[i][j] = visited[i][j];
-			}
-		}
-		return nvisited;
-	}
+
 	public static int[] dy = {-1,1,0,0};
 	public static int[] dx = {0,0,-1,1};
 	public static Struct moveBall(int y, int x, int dir, char color, Struct s) {
@@ -173,7 +171,6 @@ public class Main {
 		}
 		Struct nStruct = new Struct();
 		nStruct.map = map;
-		++nStruct.time;
 		return nStruct;
 	}
 	public static LinkedList<Integer> findR(char[][] map) {
@@ -182,19 +179,20 @@ public class Main {
 			for (int j = 0; j < map[0].length; j++) {
 				if (map[i][j] == 'R') {
 					output.addFirst(i);
-					output.addFirst(j);
+					output.addLast(j);
 				}
 			}
 		}
 		return output;
 	}
+	
 	public static LinkedList<Integer> findB(char[][] map) {
 		LinkedList<Integer> output = new LinkedList<>();
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
 				if (map[i][j] == 'B') {
 					output.addFirst(i);
-					output.addFirst(j);
+					output.addLast(j);
 				}
 			}
 		}
@@ -209,14 +207,14 @@ class Struct {
 	public Struct(char[][] map, int time) {
 		
 	}
-	public Struct(char[][] map, char[][] visited, int time) {
+	public Struct(char[][] map, boolean[][][][] visited, int time) {
 		// TODO Auto-generated constructor stub
 		this.map = map;
 		this.visited = visited;
 		this.time = time;
 	}
 	char[][] map;
-	char[][] visited;
+	boolean[][][][] visited;
 	int time;
 	int ry = -1, rx = -1, by = -1, bx = -1;
 	public void setRB() {
