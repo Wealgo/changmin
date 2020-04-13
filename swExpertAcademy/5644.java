@@ -56,11 +56,12 @@ public class Main {
 			v1 = bcMap[i][p1.y][p1.x];
 			int v2 = 0;
 			for (int j = 0; j < a; j++) {
-				if (i == j) v2 = 0;
-				else v2 = bcMap[j][p2.y][p2.x];
+				if (i == j && v1 == bcMap[j][p2.y][p2.x]) {
+					v2 = 0;
+				} else {
+					v2 = bcMap[j][p2.y][p2.x];
+				}
 				if (v1 + v2 > max) {
-					p1.v = i;
-					p2.v = j;
 					max = v1 + v2;
 				}
 			}
