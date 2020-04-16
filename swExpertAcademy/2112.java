@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
 	public static int d,w,k;
-	public static boolean[][] map;
+	public static boolean[][] map, copyMap;
 	public static boolean[] visited;
 	public static boolean ise = false;
 	public static void main(String[] args) throws IOException {
@@ -19,27 +20,31 @@ public class Main {
 			k = Integer.parseInt(st.nextToken());
 			ise = false;
 			map = new boolean[d][w];
+			copyMap = new boolean[d][w];
 			visited = new boolean[d];
 			for (int i = 0; i < d; i++) {
 				st = new StringTokenizer(br.readLine());
 				for (int j = 0; j < w; j++) {
-					if (st.nextToken().equals("0")) map[i][j] = true;
+					if (st.nextToken().equals("0")) {
+						map[i][j] = true;
+						copyMap[i][j] = true;
+					}
 				}
 			}
-			if (isTong(map)) {
+			if (isTong(map) || k == 1) {
 				System.out.println("#"+(t+1)+" "+0);
 				continue;
 			}
 			int cnt = 1;
 			while (!ise) {
-				back(cnt, 0, map);
+				
+				back(cnt, 0, copyMap);
 				cnt++;
 			}
 			System.out.println("#"+(t+1)+" "+(cnt-1));
 		}
 	}
 	public static void back(int cnt, int idx, boolean[][] map) {
-//		System.out.println("bia");
 		if (cnt == 0) {
 			if (isTong(map)) {
 				ise = true;
@@ -47,25 +52,21 @@ public class Main {
 			return;
 		}
 		if (idx >= d) return;
+		
 		visited[idx] = false;
 		back(cnt, idx+1, map);
 		visited[idx] = true;
-		boolean[][] nm = inj(map, idx, false);
-		back(cnt-1, idx+1, nm);
-		nm = inj(map, idx, true);
-		back(cnt-1, idx+1, nm);
+		inj(map, idx, false);
+		back(cnt-1, idx+1, copyMap);
+		inj(map, idx, true);
+		back(cnt-1, idx+1, copyMap);
+		recover(idx);
 	}
-	public static boolean[][] inj(boolean[][] map, int idx, boolean yak) {
-		boolean[][] nm = new boolean[d][w];
-		for (int i = 0; i < d; i++) {
-			for (int j = 0; j < w; j++) {
-				nm[i][j] = map[i][j];
-			}
-		}
-		for (int i = 0; i < w; i++) {
-			nm[idx][i] = yak;
-		}
-		return nm;
+	public static void inj(boolean[][] map, int idx, boolean yak) {
+		Arrays.fill(copyMap[idx], yak);
+	}
+	public static void recover(int idx) {
+		copyMap[idx] = map[idx].clone();
 	}
 	//good
 	public static boolean isTong(boolean[][] map) {
@@ -84,6 +85,9 @@ public class Main {
 					cnt++;
 					break;
 				}
+			}
+			if (i > cnt) {
+				return false;
 			}
 		}
 		if (cnt == w) {
