@@ -1,15 +1,11 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 /**
- * 찬찬히 침착하게 풀면된다!
+ * 와 이거 어케풀었누?
  */
 public class Main {
 	public static int sero, garo;
@@ -32,46 +28,107 @@ public class Main {
 				}
 			}
 		}
+    	
     	find();
     	findStart();
     	greedy(1);
-    	for (int i = 0; i < visitedG.length; i++) {
-			if (!visitedG[i]) {System.out.println(-1);
-			return;
+    	for (int i = 1; i < visitedG.length; i++) {
+			if (!visitedG[i]) {
+				System.out.println(-1);
+				return;
 			}
 		}
+    	if (totalIsland <= 2) {
+			System.out.println(-1);
+			return;
+		}
     	System.out.println(answer);
+    	/**/
     }
-
+    public static void findBridge(Pair p) {
+    	int root = rm[p.y][p.x];
+    	int ny = p.y;
+    	for (int i = 0; i < sero; i++) {
+			ny += dy[0];
+			if (ny < 0) break;
+			if (rm[ny][p.x] == root) break;
+			if (rm[ny][p.x] == 0 || rm[ny][p.x] == 9999) continue;
+			if (radix[ root ][ rm[ny][p.x] ] > i) {
+				if (i < 2) break;
+				radix[ root ][ rm[ny][p.x] ] = i;
+			}
+			break;
+		}
+    	
+    	//down
+    	ny = p.y;
+    	for (int i = 0; i < sero; i++) {
+			ny += dy[1];
+			if (ny >= sero) break;
+			if (rm[ny][p.x] == rm[p.y][p.x]) break;
+			if (rm[ny][p.x] == 0 || rm[ny][p.x] == 9999) continue;
+			if (radix[ root ][ rm[ny][p.x] ] > i) {
+				if (i < 2) break;
+				radix[ root ][ rm[ny][p.x] ] = i;
+			}
+			break;
+		}
+    	
+    	//left
+    	int nx = p.x;
+    	for (int i = 0; i < garo; i++) {
+			nx += dx[2];
+			if (nx < 0) break;
+			if (rm[p.y][nx] == rm[p.y][p.x]) break;
+			if (rm[p.y][nx] == 0 || rm[p.y][nx] == 9999) continue;
+			
+			if (radix[ root ][ rm[p.y][nx] ] > i) {
+				if (i < 2) break;
+				radix[ root ][ rm[p.y][nx] ] = i;
+			}
+			break;
+		}
+    	
+    	nx = p.x;
+    	for (int i = 0; i < garo; i++) {
+			nx += dx[3];
+			if (nx >= garo) break;
+			if (rm[p.y][nx] == rm[p.y][p.x]) break;
+			if (rm[p.y][nx] == 0 || rm[p.y][nx] == 9999) continue;
+			
+			if (radix[ root ][ rm[p.y][nx] ] > i) {
+				if (i < 2) break;
+				radix[ root ][ rm[p.y][nx] ] = i;
+			}
+			break;
+		}
+		/**/
+    }
     ///////
     public static boolean[] visitedG;
     public static int answer = 0;
     public static boolean[][] visiteds;
-    public static void greedy(int start) {
-    	if (visitedG[start]) return;
-    	visitedG[start] = true;
-    	LinkedList<Integer> soon = new LinkedList<>();
-    	LinkedList<Integer> tmp = new LinkedList<>();
-    	for (int i = 1; i < radix.length; i++) {
-			tmp.add(radix[start][i]);
+    public static void greedy(int idx) {
+    	visitedG[idx] = true;
+    	PriorityQueue<Pair> list = new PriorityQueue<>();
+    	for (int i = 0; i < totalIsland; i++) {
+			if (radix[idx][i] == 9999) continue;
+			Pair tmp = (new Pair(idx, i));
+			tmp.v = radix[idx][i];
+			list.add(tmp);
 		}
     	
-    	Collections.sort(tmp);
-    	for (int i = 0; i < tmp.size(); i++) {
-			if (tmp.get(i) == 9999) break;
-			for (int j = 0; j < radix.length; j++) {
-				if (visiteds[start][j]) continue;
-				if (tmp.get(i) == radix[start][j]) {
-					visiteds[start][j] = true;
-					soon.add(j);
-					break;
-				}
+    	while (!list.isEmpty()) {
+			 Pair p = list.poll();
+			 if (visitedG[p.x]) continue;
+			 visitedG[p.x] = true;
+			 answer = answer + p.v;
+			 for (int i = 0; i < totalIsland; i++) {
+				if (radix[p.x][i] == 9999) continue;
+				Pair np = new Pair(i, i);
+				np.v = radix[p.x][i];
+				list.add(np);
 			}
-		}
-    	for (int i = 0; i < soon.size(); i++) {
-    		if (visitedG[soon.get(i)]) continue;
-			answer += radix[start][soon.get(i)];
-    		greedy(soon.get(i));
 		}
     }
     public static void findStart() {
@@ -95,67 +152,7 @@ public class Main {
 		/**/
     }
     public static int[][] radix;
-    public static void findBridge(Pair p) {
-    	int root = rm[p.y][p.x];
-    	
-    	int ny = p.y;
-    	for (int i = 0; i < sero; i++) {
-			ny += dy[0];
-			if (ny < 0) break;
-			if (rm[ny][p.x] == root) break;
-			if (rm[ny][p.x] == 0) continue;
-			
-			if (radix[ root ][ rm[ny][p.x] ] > i) {
-				if (i < 2) break;
-				radix[ root ][ rm[ny][p.x] ] = i;
-			}
-			break;
-		}
-    	
-    	//down
-    	ny = p.y;
-    	for (int i = 0; i < sero; i++) {
-			ny += dy[1];
-			if (ny >= sero) break;
-			if (rm[ny][p.x] == rm[p.y][p.x]) break;
-			if (rm[ny][p.x] == 0) continue;
-			if (radix[ root ][ rm[ny][p.x] ] > i) {
-				if (i < 2) break;
-				radix[ root ][ rm[ny][p.x] ] = i;
-			}
-			break;
-		}
-    	
-    	//left
-    	int nx = p.x;
-    	for (int i = 0; i < garo; i++) {
-			nx += dx[2];
-			if (nx < 0) break;
-			if (rm[p.y][nx] == rm[p.y][p.x]) break;
-			if (rm[p.y][nx] == 0) continue;
-			
-			if (radix[ root ][ rm[p.y][nx] ] > i) {
-				if (i < 2) break;
-				radix[ root ][ rm[p.y][nx] ] = i;
-			}
-			break;
-		}
-    	
-    	nx = p.x;
-    	for (int i = 0; i < garo; i++) {
-			nx += dx[3];
-			if (nx >= garo) break;
-			if (rm[p.y][nx] == rm[p.y][p.x]) break;
-			if (rm[p.y][nx] == 0) continue;
-			
-			if (radix[ root ][ rm[p.y][nx] ] > i) {
-				if (i < 2) break;
-				radix[ root ][ rm[p.y][nx] ] = i;
-			}
-			break;
-		}
-		/**/
-    }
+    
     
     
     public static void print() {
@@ -224,12 +221,18 @@ public class Main {
 			}
 		}
     }
-    static class Pair {
-    	int y, x;
-    	public Pair(int y, int x) {
-    		// TODO Auto-generated constructor stub
-    		this.x = x;
-    		this.y = y;
-    	}
-    }
+}
+class Pair implements Comparable<Pair>{
+	int y, x;
+	int v;
+	public Pair(int y, int x) {
+		// TODO Auto-generated constructor stub
+		this.x = x;
+		this.y = y;
+	}
+	@Override
+	public int compareTo(Pair o) {
+		// TODO Auto-generated method stub
+		return this.v - o.v;
+	}
 }
