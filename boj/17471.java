@@ -5,20 +5,21 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 /**
+ * 비트마스킹 적용
  * 침착하게 찬찬히 풀면 쉽다!
  */
 public class Main {
 	public static int[] values;
 	public static boolean[][] map;
 	public static int total;
-	public static boolean[] garry;
+	public static int garry;
 	public static void main(String[] args) throws Exception {
     	// 입력받고~
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	total = Integer.parseInt(br.readLine());
     	values = new int[total];
     	map = new boolean[total][total];
-    	garry = new boolean[total];
+    	garry = 0;
     	StringTokenizer st = new StringTokenizer(br.readLine());
     	for (int i = 0; i < total; i++) {
 			values[i] = Integer.parseInt(st.nextToken());
@@ -39,33 +40,31 @@ public class Main {
 	public static int answer = 9999;
 	public static void back(int idx) {
 		int cnt = 0;
-		for (int i = 0; i < garry.length; i++) {
-			if (garry[i]) cnt++;
+		for (int i = 0; i < total; i++) {
+			if ((garry & (1 << i)) != 0) cnt++;
 		}
 		if (cnt != 0 && cnt != total) {
 			int t = 0, f = 0;
 			int tcnt = 0, fcnt = 0;
-			for (int i = 0; i < garry.length; i++) {
-				if (garry[i]) {t = i; tcnt++;}
+			for (int i = 0; i < total; i++) {
+				if ((garry & (1 << i)) != 0) {t = i; tcnt++;}
 				else {f = i; fcnt++;}
 			}
 			boolean t1 = bfsf(f, fcnt);
 			boolean t2 = bfst(t, tcnt);
 			if (t2 && t1) {
 				int vt =0, vf = 0;
-				for (int i = 0; i < garry.length; i++) {
-					if (garry[i]) vt = vt + values[i];
+				for (int i = 0; i < total; i++) {
+					if ((garry & (1 << i)) != 0) vt = vt + values[i];
 					else vf = vf + values[i];
 				}
-				if (Math.abs(vt-vf) < answer) {
-					answer = Math.abs(vt-vf);
-				}
+				answer = Math.min(answer, Math.abs(vt-vf));
 			}
 		}
-		for (int i = idx; i < garry.length; i++) {
-			garry[i] = true;
+		for (int i = idx; i < total; i++) {
+			garry = garry | (1 << i);
 			back(i+1);
-			garry[i] = false;
+			garry = garry - (1 << i);
 		}
 	}
 	public static boolean bfst(int start, int gn) {
@@ -78,7 +77,7 @@ public class Main {
 			cnt = cnt + 1;
 			for (int i = 0; i < total; i++) {
 				if (!map[n][i]) continue;
-				if (!garry[i]) continue;
+				if ((garry & (1 << i)) == 0) continue;
 				if (visited[i]) continue;
 				visited[i] = true;
 				list.add(i);
@@ -103,7 +102,7 @@ public class Main {
 			cnt = cnt + 1;
 			for (int i = 0; i < total; i++) {
 				if (!map[n][i]) continue;
-				if (garry[i]) continue;
+				if ((garry & (1 << i)) != 0) continue;
 				if (visited[i]) continue;
 				visited[i] = true;
 				list.add(i);
