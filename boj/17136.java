@@ -34,8 +34,7 @@ public class Main {
 	}
 	
 	public static void back(int idx, int cnt) {
-		System.out.println(idx+":"+cnt);
-		if (answer != 9999) return;
+		
 		if (isClear()) {
 			answer = Math.min(cnt, answer);
 			return;
@@ -44,8 +43,8 @@ public class Main {
 			int y = i / 10;
 			int x = i % 10;
 			if (!map[y][x]) continue;
-			for (int k = 5; k >= 1; k--) {
-				if (papers[k] < 1) continue;
+			for (int k = 5; k > 0; k--) {
+				if (papers[k] <= 0) continue;
 				if (!isAttach(y, x, k)) continue;
 				papers[k]--;
 				attach(y, x, k, false);
@@ -53,6 +52,7 @@ public class Main {
 				papers[k]++;
 				attach(y, x, k, true);
 			}
+			return;
 		}
 	}
 	
@@ -80,22 +80,5 @@ public class Main {
 			}
 		}
 		return true;
-	}
-	public static void printP() {
-		for (int i = 0; i < papers.length; i++) {
-			System.out.print(papers[i]);
-		}
-		System.out.println();
-	}
-	public static void print() {
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-//				System.out.print(map[i][j] + " ");
-				if (map[i][j]) System.out.print(1 + " ");
-				else System.out.print(0 + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
 	}
 }
