@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 /**
+ * 여러 시도 끝에 통과.
  * not EZ
  * @author quadcore
  */
@@ -18,35 +19,38 @@ class Main {
 		n = Integer.parseInt(st.nextToken());
 		sister = Integer.parseInt(st.nextToken());
 		visited = new boolean[100002];
-		time = 0;
-		bfs(n);
-		System.out.println(time);
+		time = -1;
+		System.out.println(bfs(n));
+		
 	}
 
-	public static void bfs(int start) {
-		LinkedList<Integer> list = new LinkedList<>();
-		list.add(start);
+	public static int bfs(int start) {
+		int output = 999999;
+		LinkedList<Pair> list = new LinkedList<>();
+		list.add(new Pair(start, 0));
 		while (!list.isEmpty()) {
 			int size = list.size();
 			for (int i = 0; i < size; i++) {
-				int tmp = list.poll();
-				while (true) {
-					if (tmp > sister) break;
-					list.addLast(tmp);
-					tmp = tmp * 2;
-				}
+				Pair subin = list.poll();
+				int idx = subin.idx;
+				int time = subin.time;
+				if (idx == sister) output = Math.min(output, time);
+				if (idx > 100000) continue;
+				if (idx < 0) continue;
+				visited[idx] = true;
+				if (idx-1 >= 0 && !visited[idx-1]) list.add(new Pair(idx-1, time+1));
+				if (idx+1 <= 100000 && !visited[idx+1]) list.add(new Pair(idx + 1, time+1));
+				if (idx*2 <= 100000 && !visited[idx*2]) list.add(new Pair(idx * 2, time));								
 			}
-			size = list.size();
-			for (int i = 0; i < size; i++) {
-				int subin = list.poll();
-				if (subin == sister) return;
-				if (subin > 100000) continue;
-				if (subin < 0) continue;
-				visited[subin] = true;
-				if (subin-1 >= 0 && !visited[subin-1]) list.add(subin-1);
-				if (!visited[subin+1] && subin+1 <= 100000) list.add(subin+1);
-			}
-			time++;
 		}
+		return output;
+	}
+}
+class Pair {
+	int time, idx;
+	public Pair(int idx, int time) {
+		// TODO Auto-generated constructor stub
+		this.time = time;
+		this.idx = idx;
 	}
 }
