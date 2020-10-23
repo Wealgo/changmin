@@ -1,19 +1,24 @@
-import java.util.*;
 
-class Solution {
-    public static void main(String[] args) {
-		Solution s = new Solution();
-		String[] p = {"123", "456", "789"};
-		System.out.println(s.solution(p));
-	}
-    public boolean solution(String[] phone_book) {
-        boolean answer = true;
-        String num = phone_book[0];
-        for (int i = 1; i < phone_book.length; i++) {
-			if (phone_book[i].contains(num)) {
-				answer = false;
-			}
-		}
-        return answer;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * EZ
+ * @author quadcore
+ */
+class Main {
+	public boolean solution(String[] phone_book) {    
+        List<String> list = Arrays.asList(phone_book);
+        Collections.sort(list);
+        for (int i = 0; i < list.size(); i++) {
+            String tmp = list.get(i);
+            for (int j = i+1; j < list.size(); j++) {
+                if (list.get(j).contains(tmp)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
