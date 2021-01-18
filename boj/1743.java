@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * EZ
+ * So EZ
  * @author quadcore
  */
 class Main {
