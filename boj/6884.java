@@ -8,7 +8,7 @@ import java.util.*;
  * @author quadcore
  */
 class Main {
-	public static ArrayList<Integer> arr;
+	public static int[] array;
 	public static boolean[] era = new boolean[200002];
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,38 +17,36 @@ class Main {
 		for (int i = 0; i < testcase; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			int cnt = Integer.parseInt(st.nextToken());
-			arr = new ArrayList<>();
+			array = new int[cnt];
 			for (int j = 0; j < cnt; j++) {
-				arr.add(Integer.parseInt(st.nextToken()));
+				int tmp = Integer.parseInt(st.nextToken());
+				array[j] = tmp;
 			}
 			System.out.println(go());
 		}
 	}
 	public static String go() {
-		for (int i = 2; i <= arr.size(); i++) {
-			for (int j = 0; j < arr.size(); j++) {
+		for (int i = 2; i < array.length; i++) {
+			int j = 0;
+			while (j + i <= array.length) {
 				int cnt = 0;
-				LinkedList<Integer> result = new LinkedList<>();
+				LinkedList<Integer> list = new LinkedList<>();
 				for (int k = j; k < j+i; k++) {
-					cnt += arr.get(k);
-					result.add(arr.get(k));
+					cnt += array[k];
+					list.add(array[k]);
 				}
-				if (cnt < 2) continue;
-				if (isPrimeNumber(cnt)) {
-					String output = "Shortest primed subsequence is length ";
-					StringBuilder sb = new StringBuilder(output);
-					sb.append(result.size()+": ");
-					for (int k = 0; k < result.size(); k++) {
-						sb.append(result.get(k)+" ");
-					}
-					return sb.toString();
+				j++;
+				if (!isPrimeNumber(cnt)) continue;
+				StringBuilder sb = new StringBuilder();
+				for (int k = 0; k < list.size(); k++) {
+					sb.append(" "+list.get(k));
 				}
+				return "Shortest primed subsequence is length "+list.size()+":"+sb.toString();
 			}
 		}
 		return "This sequence is anti-primed.";
 	}
 	public static boolean isPrimeNumber(int input) {
-
 		if (!era[input]) {
 			return true;
 		}
