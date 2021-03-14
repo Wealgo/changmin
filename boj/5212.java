@@ -29,17 +29,14 @@ class Main {
 				newmap[i][j] = true;
 			}
 		}
-		for (int i = 0; i < sero; i++) {
-			for (int j = 0; j < garo; j++) {
-				System.out.print(map[i][j]);
-			}
-			System.out.println();
-		}
 		after50Years();
-		System.out.println("=======");
-		for (int i = 0; i < sero; i++) {
-			for (int j = 0; j < garo; j++) {
-				System.out.print(newmap[i][j]);
+		for (int i = up; i < sero-down; i++) {
+			for (int j = right; j < garo-left; j++) {
+				if (newmap[i][j]) {
+					System.out.print("X");
+				} else {
+					System.out.print(".");
+				}
 			}
 			System.out.println();
 		}
@@ -53,6 +50,7 @@ class Main {
 				warm(i, j);
 			}
 		}
+		cut();
 	}
 	public static void warm(int y, int x) {
 		int cnt = 0;
@@ -67,6 +65,45 @@ class Main {
 		}
 		if (cnt >= 3) {
 			newmap[y][x] = false;
+		}
+	}
+	public static int up, down, right, left;
+	public static void cut() {
+		goup();
+		godown();
+		goright();
+		goleft();
+	}
+	public static void goup() {
+		up = 0;
+		for (int i = 0; i < sero; i++) {
+			for (int j = 0; j < garo; j++) if (newmap[i][j]) return;
+			up++;
+		}
+	}
+	public static void godown() {
+		down = 0;
+		for (int i = sero-1; i >= 0; i--) {
+			for (int j = 0; j < garo; j++) if (newmap[i][j]) return;
+			down++;
+		}
+	}
+	public static void goright() {
+		right = 0;
+		for (int i = 0; i < garo; i++) {
+			for (int j = 0; j < sero; j++) {
+				if (newmap[j][i]) return;
+			}
+			right++;
+		}
+	}
+	public static void goleft() {
+		left = 0;
+		for (int i = garo-1; i >= 0; i--) {
+			for (int j = sero-1; j >= 0; j--) {
+				if (newmap[j][i]) return;
+			}
+			left++;
 		}
 	}
 }
