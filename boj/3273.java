@@ -1,27 +1,35 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+	public static int n, x;
 	public static int[] arr;
-	public static int x;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int size = Integer.parseInt(br.readLine());
-		arr = new int[size];
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		n = Integer.parseInt(br.readLine());
+		arr = new int[n];
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < size; i++) arr[i] = Integer.parseInt(st.nextToken());
+		for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(st.nextToken());
 		x = Integer.parseInt(br.readLine());
+		Arrays.sort(arr);
 		
+		int start = 0;
+		int end = n-1;
 		int output = 0;
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = i+1; j < arr.length; j++) {
-				if (arr[i] + arr[j] == x) output++;
-			}
+		
+		while (start < end) {
+			if (arr[start] + arr[end] >= x) {
+				if (arr[start]+arr[end] == x) output++;
+				end--;
+			} else start++;
 		}
-		System.out.println(output);
+		bw.append(output+"");
+		bw.flush();
 	}
 }
